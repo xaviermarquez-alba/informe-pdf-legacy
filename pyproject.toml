@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "informe-pdf-legacy"
-version = "0.1.0"
+version = "0.2.0"
 description = "ReportLab medical-report PDF renderer extracted from TCSE."
 readme = "README.md"
 requires-python = ">=3.11"

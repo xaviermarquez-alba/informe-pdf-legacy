@@ -6,6 +6,7 @@ DEFAULT_FOOTER = (
     "responsable mediante firma electrónica."
 )
 DEFAULT_ESPECIALIDAD = "Esp. Diagnóstico por Imágenes"
+DEFAULT_RESIDENTE_ESPECIALIDAD = "Médico Residente"
 
 
 @dataclass
@@ -43,3 +44,6 @@ class InformePdfData:
     firma_image_path: str | None = None
     firma_especialidad: str = DEFAULT_ESPECIALIDAD
     footer_text: str = DEFAULT_FOOTER
+    firma_residente_nombre: str | None = None
+    firma_residente_image_path: str | None = None
+    firma_residente_especialidad: str = DEFAULT_RESIDENTE_ESPECIALIDAD

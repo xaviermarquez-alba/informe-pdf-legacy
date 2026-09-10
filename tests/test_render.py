@@ -50,6 +50,24 @@ def test_render_returns_pdf_bytes(tmp_path):
     assert len(payload) > 1000
 
 
+def test_render_supports_resident_name_and_signature_image(tmp_path):
+    data = _sample(
+        tmp_path,
+        "<p>Hallazgo de ejemplo.</p>",
+        firma_residente_nombre="Dra. Residente, Ejemplo - MP 456",
+        firma_residente_image_path=_png(
+            tmp_path / "firma-residente.png",
+            size=(40, 20),
+            color=(20, 20, 20),
+        ),
+    )
+
+    payload = render_informe_pdf(data).getvalue()
+
+    assert payload.startswith(b"%PDF")
+    assert len(payload) > 1000
+
+
 def test_long_content_produces_continuation_pages(tmp_path):
     paragraphs = "".join(f"<p>Linea de informe numero {i:03d} con texto de relleno.</p>" for i in range(80))
     buffer = render_informe_pdf(_sample(tmp_path, paragraphs))

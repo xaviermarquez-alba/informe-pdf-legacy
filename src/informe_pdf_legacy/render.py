@@ -12,6 +12,8 @@ from .models import InformePdfData
 COVER_SIZE = (595, 840)
 FIRMA_SIZE = (200, 150)
 FIRMA_ELECTRONICA_POS = (189, 70)
+FIRMA_RESIDENTE_X = 80
+FIRMA_MEDICO_X = 350
 BODY_TEXT_LEADING = 12
 FIRST_PAGE_LINE_LIMIT = 30
 CONTINUATION_LINE_LIMIT = 41
@@ -160,18 +162,31 @@ def _draw_footer(canvas, data: InformePdfData) -> None:
 
 def _draw_mid_page_signature(canvas, data: InformePdfData) -> None:
     canvas.setFont("Helvetica-Bold", 10)
-    canvas.drawString(350, 90, data.firma_especialidad)
-    canvas.drawString(350, 100, data.firma_nombre)
+    _draw_signature_text(canvas, data, 90)
     _draw_footer(canvas, data)
 
 
-def _draw_firma_image(canvas, data: InformePdfData, y: float) -> None:
-    if not data.firma_image_path:
+def _draw_signature_image(canvas, image_path: str | None, x: float, y: float) -> None:
+    if not image_path:
         return
     try:
-        Image(data.firma_image_path, *FIRMA_SIZE).drawOn(canvas, 350, y)
+        Image(image_path, *FIRMA_SIZE).drawOn(canvas, x, y)
     except Exception:
         pass
+
+
+def _draw_signature_text(canvas, data: InformePdfData, specialty_y: float) -> None:
+    if data.firma_residente_nombre:
+        canvas.drawString(FIRMA_RESIDENTE_X, specialty_y + 10, data.firma_residente_nombre)
+        canvas.drawString(FIRMA_RESIDENTE_X, specialty_y, data.firma_residente_especialidad)
+    canvas.drawString(FIRMA_MEDICO_X, specialty_y + 10, data.firma_nombre)
+    canvas.drawString(FIRMA_MEDICO_X, specialty_y, data.firma_especialidad)
+
+
+def _draw_signature_images(canvas, data: InformePdfData, y: float) -> None:
+    if data.firma_residente_nombre:
+        _draw_signature_image(canvas, data.firma_residente_image_path, FIRMA_RESIDENTE_X, y)
+    _draw_signature_image(canvas, data.firma_image_path, FIRMA_MEDICO_X, y)
 
 
 def _draw_continuation_header(canvas, data: InformePdfData) -> None:
@@ -202,9 +217,8 @@ def _draw_single_page_text(canvas, data: InformePdfData, lines: list[str]) -> No
     _draw_text_block(canvas, text, 28, 525)
     canvas.setFont("Helvetica-Bold", 10)
     line_final = max(375 - len(lines) * BODY_TEXT_LEADING, 73)
-    _draw_firma_image(canvas, data, line_final)
-    canvas.drawString(350, line_final + 17, data.firma_nombre)
-    canvas.drawString(350, line_final + 5, data.firma_especialidad)
+    _draw_signature_images(canvas, data, line_final)
+    _draw_signature_text(canvas, data, line_final + 5)
     _draw_footer(canvas, data)
     canvas.showPage()
 
@@ -242,8 +256,7 @@ def _draw_multipage_text(
     _draw_text_block(canvas, last_page, 28, A4[1] - 190)
     canvas.setFont("Helvetica-Bold", 10)
     line_final = max(height - 12 * cm - resto * BODY_TEXT_LEADING, 73)
-    _draw_firma_image(canvas, data, line_final)
-    canvas.drawString(350, line_final, data.firma_nombre)
-    canvas.drawString(350, line_final - 12, data.firma_especialidad)
+    _draw_signature_images(canvas, data, line_final)
+    _draw_signature_text(canvas, data, line_final - 12)
     _draw_footer(canvas, data)
     canvas.showPage()

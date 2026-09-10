@@ -62,6 +62,8 @@ data = InformePdfData(
     body_image_path="/absolute/path/to/imageninforme2.png",
     codigos=["CT01 - Estudio"],
     # firma_image_path="/absolute/path/to/firma.png",
+    # firma_residente_nombre="Dra. Residente - MP 456",
+    # firma_residente_image_path="/absolute/path/to/firma-residente.png",
 )
 buffer = render_informe_pdf(data)
 # buffer is a BytesIO of PDF bytes
@@ -69,6 +71,8 @@ buffer = render_informe_pdf(data)
 
 `InformePdfData` describes display-ready fields. Branding images are supplied
 by callers. This is visual signature rendering, not cryptographic PDF signing.
+When resident fields are supplied, the resident and reporting physician are
+rendered together at the end of the report.
 
 Application permissions, finalization, file storage and database transactions
 remain in Django. Existing stored PDFs should still be served without rendering again.
