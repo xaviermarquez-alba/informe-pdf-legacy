@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "informe-pdf-legacy"
+version = "0.1.0"
+description = "ReportLab medical-report PDF renderer extracted from TCSE."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "UNLICENSED" }
+authors = [{ name = "Marcelo Xavier Marquez Alba" }]
+dependencies = [
+    "html2text>=2019.9.26",
+    "reportlab>=4.0,<5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.urls]
+Repository = "https://github.com/xaviermarquez-alba/informe-pdf-legacy"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
