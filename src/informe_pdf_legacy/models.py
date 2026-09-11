@@ -6,7 +6,7 @@ DEFAULT_FOOTER = (
     "responsable mediante firma electrónica."
 )
 DEFAULT_ESPECIALIDAD = "Esp. Diagnóstico por Imágenes"
-DEFAULT_RESIDENTE_ESPECIALIDAD = "Médico Residente"
+DEFAULT_RESIDENTE_ESPECIALIDAD = "Medico"
 
 
 @dataclass
