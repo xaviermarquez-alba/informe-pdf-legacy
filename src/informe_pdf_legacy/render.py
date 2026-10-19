@@ -10,7 +10,7 @@ from .canvas import NumberedPageCanvas
 from .models import InformePdfData
 
 COVER_SIZE = (595, 840)
-FIRMA_SIZE = (200, 150)
+FIRMA_SIZE = (200, 100)
 FIRMA_ELECTRONICA_POS = (189, 70)
 FIRMA_RESIDENTE_X = 80
 FIRMA_MEDICO_X = 350
@@ -216,8 +216,9 @@ def _draw_single_page_text(canvas, data: InformePdfData, lines: list[str]) -> No
     canvas.setFont("Helvetica", 11)
     _draw_text_block(canvas, text, 28, 525)
     canvas.setFont("Helvetica-Bold", 10)
-    line_final = max(375 - len(lines) * BODY_TEXT_LEADING, 73)
-    _draw_signature_images(canvas, data, line_final)
+    line_final = max(375 - len(lines) * BODY_TEXT_LEADING, 73) + 20
+    signature_image_y = line_final + 32
+    _draw_signature_images(canvas, data, signature_image_y)
     _draw_signature_text(canvas, data, line_final + 5)
     _draw_footer(canvas, data)
     canvas.showPage()
