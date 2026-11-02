@@ -178,9 +178,9 @@ def _draw_signature_image(canvas, image_path: str | None, x: float, y: float) ->
 def _draw_signature_text(canvas, data: InformePdfData, specialty_y: float) -> None:
     if data.firma_residente_nombre:
         canvas.drawString(FIRMA_RESIDENTE_X, specialty_y + 10, data.firma_residente_nombre)
-        canvas.drawString(FIRMA_RESIDENTE_X, specialty_y, data.firma_residente_especialidad)
+        canvas.drawString(FIRMA_RESIDENTE_X, specialty_y, " ".join(filter(None, (data.firma_residente_cargo.strip(), data.firma_residente_especialidad))))
     canvas.drawString(FIRMA_MEDICO_X, specialty_y + 10, data.firma_nombre)
-    canvas.drawString(FIRMA_MEDICO_X, specialty_y, data.firma_especialidad)
+    canvas.drawString(FIRMA_MEDICO_X, specialty_y, " ".join(filter(None, (data.firma_cargo.strip(), data.firma_especialidad))))
 
 
 def _draw_signature_images(canvas, data: InformePdfData, y: float) -> None:

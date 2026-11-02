@@ -75,3 +75,15 @@ def test_long_content_produces_continuation_pages(tmp_path):
     assert payload.startswith(b"%PDF")
     page_count = payload.count(b"/Type /Page") + payload.count(b"/Type/Page")
     assert page_count >= 3
+
+
+def test_signature_cargo_defaults_and_custom_values(tmp_path):
+    from unittest.mock import Mock
+    from informe_pdf_legacy.render import _draw_signature_text
+
+    for cargo, expected in [("", "Diagnóstico por Imágenes"), ("Esp.", "Esp. Diagnóstico por Imágenes")]:
+        canvas = Mock()
+        data = _sample(tmp_path, "", firma_cargo=cargo)
+        _draw_signature_text(canvas, data, 90)
+        assert canvas.drawString.call_args.args[2] == expected
+    assert _sample(tmp_path, "").firma_cargo == ""

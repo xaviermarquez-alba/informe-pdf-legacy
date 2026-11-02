@@ -76,3 +76,6 @@ rendered together at the end of the report.
 
 Application permissions, finalization, file storage and database transactions
 remain in Django. Existing stored PDFs should still be served without rendering again.
+
+`firma_cargo` and `firma_residente_cargo` prefix their respective specialty lines
+and default to `""`. Pass `"Esp."` explicitly to render `Esp. Diagnóstico por Imágenes`.
