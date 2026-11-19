@@ -1,3 +1,4 @@
+import io
 from pathlib import Path
 
 from PIL import Image as PILImage
@@ -87,3 +88,21 @@ def test_signature_cargo_defaults_and_custom_values(tmp_path):
         _draw_signature_text(canvas, data, 90)
         assert canvas.drawString.call_args.args[2] == expected
     assert _sample(tmp_path, "").firma_cargo == ""
+
+
+def test_signature_image_keeps_its_proportions(tmp_path):
+    from reportlab.pdfgen.canvas import Canvas
+
+    from informe_pdf_legacy.render import FIRMA_SIZE, _draw_signature_image
+
+    drawn = []
+
+    class RecordingCanvas(Canvas):
+        def drawImage(self, image, x, y, width=None, height=None, **kwargs):
+            drawn.append((image.getSize(), (width, height), kwargs))
+            return super().drawImage(image, x, y, width, height, **kwargs)
+
+    portrait = _png(tmp_path / "firma-alta.png", size=(95, 250), color=(10, 10, 10))
+    _draw_signature_image(RecordingCanvas(io.BytesIO()), portrait, 350, 100)
+
+    assert drawn == [((95, 250), FIRMA_SIZE, {"mask": "auto", "preserveAspectRatio": True, "anchor": "s"})]

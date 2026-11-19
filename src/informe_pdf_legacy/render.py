@@ -4,6 +4,7 @@ import textwrap
 import html2text
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
+from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Image
 
 from .canvas import NumberedPageCanvas
@@ -170,7 +171,16 @@ def _draw_signature_image(canvas, image_path: str | None, x: float, y: float) ->
     if not image_path:
         return
     try:
-        Image(image_path, *FIRMA_SIZE).drawOn(canvas, x, y)
+        # Fit inside the box instead of stretching: signatures are not all 4:3.
+        canvas.drawImage(
+            ImageReader(image_path),
+            x,
+            y,
+            *FIRMA_SIZE,
+            mask="auto",
+            preserveAspectRatio=True,
+            anchor="s",
+        )
     except Exception:
         pass
 
